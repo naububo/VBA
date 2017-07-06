@@ -1,0 +1,33 @@
+'在同一文件夹下合并两个txt到另一个txt中
+Option Explicit
+Sub readAndWirite()
+    Dim i&, j&, s$
+    
+    Open "C:\Users\Administrator\Desktop\VBAtest\提高篇\12回\demo\残本1.txt" For Input As #1
+    Open "C:\Users\Administrator\Desktop\VBAtest\提高篇\12回\demo\残本2.txt" For Input As #2
+    
+    i = 2
+    Do While Not EOF(1) Or Not EOF(2)
+        If Not EOF(1) Then
+            Line Input #1, s
+            Cells(i, 2) = s: i = i + 1
+        End If
+        
+        If Not EOF(2) Then
+            Line Input #2, s
+            Cells(i, 2) = s: i = i + 1
+        End If
+    Loop
+    
+    Close #1, #2
+    
+    Open "C:\Users\Administrator\Desktop\VBAtest\提高篇\12回\demo\葵花宝典.txt" For Output As #3
+    i = 2
+    Do While Cells(i, 2) <> ""
+        Print #3, Cells(i, 2)
+        i = i + 1
+    Loop
+    Close #3
+    
+    
+End Sub
