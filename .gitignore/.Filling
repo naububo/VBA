@@ -3,7 +3,7 @@ Sub Filling()
     Dim i&, k%          'i为行，k为列
     Dim r As Worksheet, w As Worksheet
     Set r = Worksheets("党员基本信息汇总表")
-    Set w = Worksheets("卜浩宇")
+    Set w = Worksheets("sheet1")
     i = 5
 '    For k = 2 To 18
         r.Cells(i, 2) = w.Cells(3, 2) '姓名
