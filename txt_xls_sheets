@@ -1,0 +1,34 @@
+'从txt中提取字符串，根据城市填充在不同的sheet中
+Option Explicit
+Sub dirTest()
+    Dim f$, path$
+'    必须以\结尾，否则查找这个文件
+    path = "C:\Users\Administrator\Desktop\VBAtest\提高篇\12回\demo2\"
+    f = Dir(path)
+    Do While f <> ""
+'    处理f文件进行打开和读取操作
+'     为了方便，写成了子程序
+        readFormFile (path & f)
+        f = Dir
+    Loop
+End Sub
+
+Sub readFormFile(fullName$)
+    Dim ws As Worksheet, i&, s$
+    
+    Set ws = Worksheets.Add
+'    ws.Name = Mid(fullName, InStr(fullName, "\") + 1)
+    
+    Open fullName For Input As #1
+    i = 1
+    Do While Not EOF(1)
+        Line Input #1, s
+        ws.Name = Left(s, 2)
+        ws.Cells(i, 2) = Left(s, 2) '最左边的两个字符，城市
+        ws.Cells(i, 3) = Mid(s, InStr(s, "电话") + 3, 8) '电话8位，+3是因为电话：占三个字符
+        i = i + 1
+    Loop
+    
+    Close #1
+    
+End Sub
