@@ -1,4 +1,4 @@
-'在同一文件夹下合并两个txt到另一个txt中(变化？)
+'在同一文件夹下合并两个txt到另一个txt中化？)
 Option Explicit
 Sub readAndWirite()
     Dim i&, j&, s$
