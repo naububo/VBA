@@ -39,7 +39,7 @@ Sub CalculateInterest()
     
     
    ' MsgBox longLoan
-   Call Filling(duanQi, shortLoan)
+   Call Filling(changQi, longLoan)
     
     
 '    sheetName = Left(r.Cells(8, 2), 4)
@@ -81,18 +81,34 @@ Sub Filling(deadlineStyle$, position&)
             Next m
             '此时填充的是一、自银行取得的借款
             For n = bankLocation To notBankLocation - 1
-                ar.Cells(position, 2) = ws.Cells(n, 1)      '银行名称B
-                ar.Cells(position, 3) = ws.Cells(n, 15)     '期初数C
-                ar.Cells(position, 4) = ws.Cells(n, 17)     '本期增加D
-                ar.Cells(position, 5) = ws.Cells(n, 19)      '本期减少（本期偿还？）E
-                ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
-                ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
-                ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
-                ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
-                ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
-                '自动添加一行空行
-                ar.Rows(position + 1).Resize(1).Insert
-                position = position + 1
+                If ws.Cells(n, 1) <> "" Then
+                    ar.Cells(position, 2) = ws.Cells(n, 1)      '银行名称B
+                    ar.Cells(position, 3) = ws.Cells(n, 15)     '期初数C
+                    ar.Cells(position, 4) = ws.Cells(n, 17)     '本期增加D
+                    ar.Cells(position, 5) = ws.Cells(n, 19)      '本期减少（本期偿还？）E
+                    ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                    ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
+                    ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
+                    ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
+                    ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
+                    
+                    position = position + 1
+    ''                期初和期末都有余额的，如果有本期增加或减少的情况，请用期初余额和期末余额的平均值乘以计息天数计算
+    '                If (ar.Cells(position, 3) <> 0 And ar.Cells(position, 6) <> 0) And (ar.Cells(position, 4) <> 0 Or ar.Cells(position, 5) <> 0) Then
+    '                    MsgBox 1
+    ''                有期初数的，本期全额减少导致期末余额为0的，请用本期减少乘以计息天数计算。
+    '                ElseIf ar.Cells(position, 3) <> 0 And (ar.Cells(position, 5) = ar.Cells(position, 3)) Then
+    '                    MsgBox 2
+    ''                没有期初数的，系本期新增的，请用期末余额乘以计息天数计算
+    '                ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 6)) Then
+    '                    MsgBox 3
+    ''                没有期初数的，本期新增的，但本期已减少至期末余额为0，请用本期增加乘以计息天数计算。
+    '                ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 5)) Then
+    '                    MsgBox 4
+    '                End If
+                    '自动添加一行空行
+                    ar.Rows(position + 1).Resize(1).Insert
+                End If
             Next n
             
 '            ar.Cells(position, 2) = ws.Cells(9, 1)      '银行名称B
@@ -109,8 +125,4 @@ Sub Filling(deadlineStyle$, position&)
 '            MsgBox stockCompanyLocation
         End If
     Next ws
-End Sub
-'期初数,
-Sub GudgeInterest(BeginningBalance, ClosingBalance, CurrentIncrease, CurrentDecrease)
-    if
 End Sub
