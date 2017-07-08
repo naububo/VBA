@@ -8,7 +8,7 @@ Sub CalculateInterest()
     
     Set r = Worksheets("利息测算")
     '到最后一行已经使用的行数
-    endRow = r.UsedRange.Row + r.UsedRange.Rows.Count - 1 '利息测算sheet
+    endRow = r.UsedRange.Row + r.UsedRange.Rows.count - 1 '利息测算sheet
     
     
     duanQi = "短期借款": changQi = "长期借款"
@@ -21,6 +21,7 @@ Sub CalculateInterest()
             Exit For
         End If
     Next i
+    'Call Filling(duanQi, shortLoan)
      '计算利息测算sheet里面长期借款的开始位置
     For i = shortLoan To endRow
         If InStr(r.Cells(i, 2), changQi) Then
@@ -28,6 +29,7 @@ Sub CalculateInterest()
             Exit For
         End If
     Next i
+    Call Filling(changQi, longLoan)
     
 '     '计算明细表sheet里面一银行的开始位置
 '    For i = 6 To endRow
@@ -37,9 +39,9 @@ Sub CalculateInterest()
 '        End If
 '    Next i
     
-    
    ' MsgBox longLoan
-   Call Filling(changQi, longLoan)
+
+  
     
     
 '    sheetName = Left(r.Cells(8, 2), 4)
@@ -47,7 +49,7 @@ Sub CalculateInterest()
 End Sub
 'deadlineStyle传入长短期, position传入填充长短期的具体位
 Sub Filling(deadlineStyle$, position&)
-    Dim m&, n&, ListEndRow&, bankLocation&, notBankLocation&, stockCompanyLocation&
+    Dim m&, n&, ListEndRow&, bankLocation&, notBankLocation&, stockCompanyLocation&, count&
     Dim bank$, notBank$, jointStockCompany$
     Dim ws As Worksheet, ar As Worksheet 'w是循环寻找到的sheet,ar是需要填充的利息测算sheet
     
@@ -57,7 +59,7 @@ Sub Filling(deadlineStyle$, position&)
     
     For Each ws In Worksheets
         If InStr(ws.Name, deadlineStyle) Then
-            ListEndRow = ws.UsedRange.Row + ws.UsedRange.Rows.Count - 1 '明细表sheet
+            ListEndRow = ws.UsedRange.Row + ws.UsedRange.Rows.count - 1 '明细表sheet
             '计算出一、自银行取得的借款的起始位置
             For m = 6 To ListEndRow
                 If InStr(ws.Cells(m, 1), bank) Then
@@ -81,8 +83,40 @@ Sub Filling(deadlineStyle$, position&)
             Next m
             '此时填充的是一、自银行取得的借款
             For n = bankLocation To notBankLocation - 1
-                If ws.Cells(n, 1) <> "" Then
+                If Trim(ws.Cells(n, 1)) <> "" And Trim(ws.Cells(n, 1)) <> "抵销" Then
                     ar.Cells(position, 2) = ws.Cells(n, 1)      '银行名称B
+                    ar.Cells(position, 3) = ws.Cells(n, 15)     '期初数C
+                    ar.Cells(position, 4) = ws.Cells(n, 17)     '本期增加D
+                    ar.Cells(position, 5) = ws.Cells(n, 19)      '本期减少（本期偿还？）E
+                    ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                    ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
+                    ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
+                    ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
+                    ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
+
+                    position = position + 1
+    ''                期初和期末都有余额的，如果有本期增加或减少的情况，请用期初余额和期末余额的平均值乘以计息天数计算
+    '                If (ar.Cells(position, 3) <> 0 And ar.Cells(position, 6) <> 0) And (ar.Cells(position, 4) <> 0 Or ar.Cells(position, 5) <> 0) Then
+    '                    MsgBox 1
+    ''                有期初数的，本期全额减少导致期末余额为0的，请用本期减少乘以计息天数计算。
+    '                ElseIf ar.Cells(position, 3) <> 0 And (ar.Cells(position, 5) = ar.Cells(position, 3)) Then
+    '                    MsgBox 2
+    ''                没有期初数的，系本期新增的，请用期末余额乘以计息天数计算
+    '                ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 6)) Then
+    '                    MsgBox 3
+    ''                没有期初数的，本期新增的，但本期已减少至期末余额为0，请用本期增加乘以计息天数计算。
+    '                ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 5)) Then
+    '                    MsgBox 4
+    '                End If
+                    '自动添加一行空行
+                    ar.Rows(position + 1).Resize(1).Insert
+                End If
+            Next n
+            MsgBox position
+            
+            For n = notBankLocation + 1 To stockCompanyLocation - 1
+                If Trim(ws.Cells(n, 1)) <> "" And Trim(ws.Cells(n, 1)) <> "抵销" Then
+                    ar.Cells(position + 3, 2) = ws.Cells(n, 1)    '银行名称B
                     ar.Cells(position, 3) = ws.Cells(n, 15)     '期初数C
                     ar.Cells(position, 4) = ws.Cells(n, 17)     '本期增加D
                     ar.Cells(position, 5) = ws.Cells(n, 19)      '本期减少（本期偿还？）E
@@ -107,22 +141,9 @@ Sub Filling(deadlineStyle$, position&)
     '                    MsgBox 4
     '                End If
                     '自动添加一行空行
-                    ar.Rows(position + 1).Resize(1).Insert
+                    ar.Rows(position + count).Resize(1).Insert
                 End If
             Next n
-            
-'            ar.Cells(position, 2) = ws.Cells(9, 1)      '银行名称B
-'            ar.Cells(position, 3) = ws.Cells(9, 15)     '期初数C
-'            ar.Cells(position, 4) = ws.Cells(9, 17)     '本期增加D
-'            ar.Cells(position, 5) = ws.Cells(9, 19)      '本期减少（本期偿还？）E
-'            ar.Cells(position, 6) = ws.Cells(9, 22)      '期末余额（期末数）F
-'            ar.Cells(position, 7) = ws.Cells(9, 3)       '借入日G
-'            ar.Cells(position, 8) = ws.Cells(9, 4)      '到期日H
-'            ar.Cells(position, 9) = ws.Cells(9, 6)      '固定利率I
-'            ar.Cells(position, 10) = ws.Cells(9, 7)      '浮动利率
-'            '自动添加一行空行
-'            Rows(position + 1).Resize(1).Insert
-'            MsgBox stockCompanyLocation
         End If
     Next ws
 End Sub
