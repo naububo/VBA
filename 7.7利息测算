@@ -1,0 +1,116 @@
+Option Explicit
+Sub CalculateInterest()
+'shortLoan（longLoan）为短（长）期借款的起始位置
+    Dim i&, k&, endRow&
+    Dim shortLoan&, longLoan&
+    Dim sheetName$, duanQi$, changQi$
+    Dim r As Worksheet, w As Worksheet
+    
+    Set r = Worksheets("利息测算")
+    '到最后一行已经使用的行数
+    endRow = r.UsedRange.Row + r.UsedRange.Rows.Count - 1 '利息测算sheet
+    
+    
+    duanQi = "短期借款": changQi = "长期借款"
+    
+    
+    '计算利息测算sheet里面短期借款的开始位置
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 2), duanQi) Then
+            shortLoan = i + 3
+            Exit For
+        End If
+    Next i
+     '计算利息测算sheet里面长期借款的开始位置
+    For i = shortLoan To endRow
+        If InStr(r.Cells(i, 2), changQi) Then
+            longLoan = i + 3
+            Exit For
+        End If
+    Next i
+    
+'     '计算明细表sheet里面一银行的开始位置
+'    For i = 6 To endRow
+'        If InStr(r.Cells(i, 2), changQi) Then
+'            longLoan = i + 3
+'            Exit For
+'        End If
+'    Next i
+    
+    
+   ' MsgBox longLoan
+   Call Filling(duanQi, shortLoan)
+    
+    
+'    sheetName = Left(r.Cells(8, 2), 4)
+'    MsgBox sheetName
+End Sub
+'deadlineStyle传入长短期, position传入填充长短期的具体位
+Sub Filling(deadlineStyle$, position&)
+    Dim m&, n&, ListEndRow&, bankLocation&, notBankLocation&, stockCompanyLocation&
+    Dim bank$, notBank$, jointStockCompany$
+    Dim ws As Worksheet, ar As Worksheet 'w是循环寻找到的sheet,ar是需要填充的利息测算sheet
+    
+    Set ar = Worksheets("利息测算")
+    bank = "自银行取得的": notBank = "自非银行金融机构及其他资金拆借单位取得的"
+    jointStockCompany = "自股份公司及财务公司取得的"
+    
+    For Each ws In Worksheets
+        If InStr(ws.Name, deadlineStyle) Then
+            ListEndRow = ws.UsedRange.Row + ws.UsedRange.Rows.Count - 1 '明细表sheet
+            '计算出一、自银行取得的借款的起始位置
+            For m = 6 To ListEndRow
+                If InStr(ws.Cells(m, 1), bank) Then
+                    bankLocation = m + 1   'bankLocation=9
+                    Exit For
+                End If
+            Next m
+             '计算出二、自非银行金融机构借款的起始位置
+            For m = bankLocation To ListEndRow
+                If InStr(ws.Cells(m, 1), notBank) Then
+                    notBankLocation = m    'notBankLocation = 62
+                    Exit For
+                End If
+            Next m
+            '计算出三、自股份公司及财务公司借款的起始位置
+            For m = notBankLocation To ListEndRow
+                If InStr(ws.Cells(m, 1), jointStockCompany) Then
+                    stockCompanyLocation = m      'stockCompanyLocation = 64
+                    Exit For
+                End If
+            Next m
+            '此时填充的是一、自银行取得的借款
+            For n = bankLocation To notBankLocation - 1
+                ar.Cells(position, 2) = ws.Cells(n, 1)      '银行名称B
+                ar.Cells(position, 3) = ws.Cells(n, 15)     '期初数C
+                ar.Cells(position, 4) = ws.Cells(n, 17)     '本期增加D
+                ar.Cells(position, 5) = ws.Cells(n, 19)      '本期减少（本期偿还？）E
+                ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
+                ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
+                ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
+                ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
+                '自动添加一行空行
+                ar.Rows(position + 1).Resize(1).Insert
+                position = position + 1
+            Next n
+            
+'            ar.Cells(position, 2) = ws.Cells(9, 1)      '银行名称B
+'            ar.Cells(position, 3) = ws.Cells(9, 15)     '期初数C
+'            ar.Cells(position, 4) = ws.Cells(9, 17)     '本期增加D
+'            ar.Cells(position, 5) = ws.Cells(9, 19)      '本期减少（本期偿还？）E
+'            ar.Cells(position, 6) = ws.Cells(9, 22)      '期末余额（期末数）F
+'            ar.Cells(position, 7) = ws.Cells(9, 3)       '借入日G
+'            ar.Cells(position, 8) = ws.Cells(9, 4)      '到期日H
+'            ar.Cells(position, 9) = ws.Cells(9, 6)      '固定利率I
+'            ar.Cells(position, 10) = ws.Cells(9, 7)      '浮动利率
+'            '自动添加一行空行
+'            Rows(position + 1).Resize(1).Insert
+'            MsgBox stockCompanyLocation
+        End If
+    Next ws
+End Sub
+'期初数,
+Sub GudgeInterest(BeginningBalance, ClosingBalance, CurrentIncrease, CurrentDecrease)
+    if
+End Sub
