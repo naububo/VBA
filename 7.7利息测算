@@ -1,7 +1,7 @@
 Option Explicit
 Sub CalculateInterest()
 'shortLoan（longLoan）为短（长）期借款的起始位置
-    Dim i&, k&, endRow&
+    Dim i&, k&, endRow&, ceshi&
     Dim shortLoan&, longLoan&
     Dim sheetName$, duanQi$, changQi$
     Dim r As Worksheet, w As Worksheet
@@ -29,6 +29,9 @@ Sub CalculateInterest()
             Exit For
         End If
     Next i
+    ceshi = 9
+    '取出linked测试
+    'r.Cells(4, 1) = "='[7.7利息测算测试.xlsm]长期借款明细表'!R" & ceshi & "C1"
     Call Filling(changQi, longLoan)
     
 '     '计算明细表sheet里面一银行的开始位置
