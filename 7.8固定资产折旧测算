@@ -2,9 +2,9 @@
 '给新进intern的面试题目
 Option Explicit
 Sub AccumulatedDepreciation() '累计折旧取数
-    Dim i&, n&, originalValue&, endRow&
-    Dim BLocation&, TurningLocation&, CELocation&, TELocation&, OELocation&
-    Dim Building$, TurningEquipment$, ConstructionEquipment$, TestEquipment$, OtherEquipment$
+    Dim i&, n&, m&, originalValueSum#, depreciatedSum#, endRow&
+    Dim BLocation&, SELocation&, TurningLocation&, CELocation&, TELocation&, OELocation&
+    Dim Building$, SEquipment$, TurningEquipment$, ConstructionEquipment$, TestEquipment$, OtherEquipment$
     Dim r As Worksheet, w As Worksheet
     
     Set r = Worksheets("累计折旧测试")
@@ -13,7 +13,7 @@ Sub AccumulatedDepreciation() '累计折旧取数
     endRow = r.UsedRange.Row + r.UsedRange.Rows.Count - 1 '利息测算sheet
     
     Building = "房屋及建筑物小计": TurningEquipment = "运输设备小计": ConstructionEquipment = "生产设备小计"
-    TestEquipment = "测量及试验设备小计": OtherEquipment = "其他固定资产小计"
+    SEquipment = "施工设备小计": TestEquipment = "测量及试验设备小计": OtherEquipment = "其他固定资产小计"
 
 '*********房屋及建筑物小计*********
     For i = 6 To endRow
@@ -22,37 +22,244 @@ Sub AccumulatedDepreciation() '累计折旧取数
             Exit For
         End If
     Next i
+    m = BLocation - 1
 '    MsgBox BLocation
+    r.Rows(n + BLocation).Resize(1).Insert
+    r.Rows(n + BLocation).Clear
     n = 2
     Do While w.Cells(n, 1) <> ""
         If Left(w.Cells(n, 3), 2) = "01" Then
-            r.Cells(n + BLocation - 2, 3) = w.Cells(n, 2) '资产类别
-            r.Cells(n + BLocation - 2, 4) = w.Cells(n, 3) '类别编号
-            r.Cells(n + BLocation - 2, 5) = w.Cells(n, 1) '资产名称
-            r.Cells(n + BLocation - 2, 6) = w.Cells(n, 12) '组资日期L
-            r.Cells(n + BLocation - 2, 7) = w.Cells(n, 8) '使用期数H
-            r.Cells(n + BLocation - 2, 8) = w.Cells(n, 15) '原值   384
-            r.Cells(n + BLocation - 2, 9) = w.Cells(n, 17) / w.Cells(n, 15) '净残值率   5%   Q/O*100%
-            r.Cells(n + BLocation - 2, 10) = w.Cells(n, 21) '本期计提折旧U   1521
-            r.Cells(n + BLocation - 2, 11) = w.Cells(n, 25) '累计折旧y  228
-            r.Cells(n + BLocation - 2, 12) = w.Cells(n, 27) '净值aa  156
+            r.Cells(BLocation, 3) = w.Cells(n, 2)  '资产类别
+            r.Cells(BLocation, 4) = w.Cells(n, 3)  '类别编号
+            r.Cells(BLocation, 5) = w.Cells(n, 1)  '资产名称
+            r.Cells(BLocation, 6) = w.Cells(n, 12)   '组资日期L
+            r.Cells(BLocation, 7) = w.Cells(n, 8)  '使用期数H
+            r.Cells(BLocation, 8) = w.Cells(n, 15)  '原值   384
+            If w.Cells(n, 15) <> 0 Then
+                r.Cells(BLocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+            End If
+            r.Cells(BLocation, 10) = w.Cells(n, 21)  '本期计提折旧U   1521
+            r.Cells(BLocation, 11) = w.Cells(n, 25)  '累计折旧y  228
+            r.Cells(BLocation, 12) = w.Cells(n, 27)  '净值aa  156
+'            计算原值和
+            originalValueSum = originalValueSum + r.Cells(BLocation, 8)
+'            计算折旧和
+            depreciatedSum = depreciatedSum + r.Cells(BLocation, 11)
             
-            r.Rows(n + BLocation - 1).Resize(1).Insert
-            MsgBox TypeName(r.Cells(n + BLocation - 2, 10).Value)
+            BLocation = BLocation + 1
+            r.Rows(BLocation).Resize(1).Insert
+
+        End If
+        n = n + 1
+    Loop
+    r.Cells(m, 8) = originalValueSum
+    r.Cells(m, 11) = depreciatedSum
+    
+'*********施工设备小计*********
+
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 3), SEquipment) Then
+            SELocation = i + 1
+            Exit For
+        End If
+    Next i
+    m = SELocation - 1
+'    MsgBox BLocation
+    r.Rows(n + SELocation).Resize(1).Insert
+    r.Rows(n + SELocation).Clear
+    n = 2
+    Do While w.Cells(n, 1) <> ""
+        If Left(w.Cells(n, 3), 2) = "02" Then
+
+            r.Cells(SELocation, 3) = w.Cells(n, 2)  '资产类别
+            r.Cells(SELocation, 4) = w.Cells(n, 3)   '类别编号
+            r.Cells(SELocation, 5) = w.Cells(n, 1)  '资产名称
+            r.Cells(SELocation, 6) = w.Cells(n, 12)  '组资日期L
+            r.Cells(SELocation, 7) = w.Cells(n, 8)  '使用期数H
+            r.Cells(SELocation, 8) = w.Cells(n, 15)  '原值   384
+            If w.Cells(n, 15) <> 0 Then
+                r.Cells(SELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+            End If
+            r.Cells(SELocation, 10) = w.Cells(n, 21)  '本期计提折旧U   1521
+            r.Cells(SELocation, 11) = w.Cells(n, 25)   '累计折旧y  228
+            r.Cells(SELocation, 12) = w.Cells(n, 27)  '净值aa  156
+            
+            '计算原值和
+            originalValueSum = originalValueSum + r.Cells(SELocation, 8)
+'            计算折旧和
+            depreciatedSum = depreciatedSum + r.Cells(SELocation, 11)
+            
+            SELocation = SELocation + 1
+            r.Rows(SELocation).Resize(1).Insert
+'            MsgBox TypeName(r.Cells(n + BLocation - 2, 10).Value)
+
+        End If
+        n = n + 1
+    Loop
+    r.Cells(m, 8) = originalValueSum
+    r.Cells(m, 11) = depreciatedSum
+    
+
+'*********运输设备小计*********
+
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 3), TurningEquipment) Then
+            TurningLocation = i + 1
+            Exit For
+        End If
+    Next i
+    m = TurningLocation - 1
+    r.Rows(n + TurningLocation).Resize(1).Insert
+    r.Rows(n + TurningLocation).Clear
+    n = 2
+    Do While w.Cells(n, 1) <> ""
+        If Left(w.Cells(n, 3), 2) = "03" Then
+
+            r.Cells(TurningLocation, 3) = w.Cells(n, 2)  '资产类别
+            r.Cells(TurningLocation, 4) = w.Cells(n, 3)  '类别编号
+            r.Cells(TurningLocation, 5) = w.Cells(n, 1)   '资产名称
+            r.Cells(TurningLocation, 6) = w.Cells(n, 12)   '组资日期L
+            r.Cells(TurningLocation, 7) = w.Cells(n, 8)   '使用期数H
+            r.Cells(TurningLocation, 8) = w.Cells(n, 15)  '原值   384
+            If w.Cells(n, 15) <> 0 Then
+                r.Cells(TurningLocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+            End If
+            r.Cells(TurningLocation, 10) = w.Cells(n, 21)  '本期计提折旧U   1521
+            r.Cells(TurningLocation, 11) = w.Cells(n, 25)   '累计折旧y  228
+            r.Cells(TurningLocation, 12) = w.Cells(n, 27)   '净值aa  156
+'            计算原值和
+            originalValueSum = originalValueSum + r.Cells(TurningLocation, 8)
+'            计算折旧和
+            depreciatedSum = depreciatedSum + r.Cells(TurningLocation, 11)
+            
+            TurningLocation = TurningLocation + 1
+            r.Rows(TurningLocation).Resize(1).Insert
+
+
+        End If
+        n = n + 1
+    Loop
+    r.Cells(m, 8) = originalValueSum
+    r.Cells(m, 11) = depreciatedSum
+
+'*********生产设备小计*********
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 3), ConstructionEquipment) Then
+            CELocation = i + 1
+            Exit For
+        End If
+    Next i
+    m = CELocation - 1
+    r.Rows(n + CELocation).Resize(1).Insert
+    r.Rows(n + CELocation).Clear
+    n = 2
+    Do While w.Cells(n, 1) <> ""
+        If Left(w.Cells(n, 3), 2) = "04" Then
+
+            r.Cells(CELocation, 3) = w.Cells(n, 2)   '资产类别
+            r.Cells(CELocation, 4) = w.Cells(n, 3)   '类别编号
+            r.Cells(CELocation, 5) = w.Cells(n, 1)  '资产名称
+            r.Cells(CELocation, 6) = w.Cells(n, 12)   '组资日期L
+            r.Cells(CELocation, 7) = w.Cells(n, 8)   '使用期数H
+            r.Cells(CELocation, 8) = w.Cells(n, 15)  '原值   384
+            If w.Cells(n, 15) <> 0 Then
+                r.Cells(CELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+            End If
+            r.Cells(CELocation, 10) = w.Cells(n, 21)   '本期计提折旧U   1521
+            r.Cells(CELocation, 11) = w.Cells(n, 25)   '累计折旧y  228
+            r.Cells(CELocation, 12) = w.Cells(n, 27)  '净值aa  156
+'            计算原值和
+            originalValueSum = originalValueSum + r.Cells(CELocation, 8)
+'            计算折旧和
+            depreciatedSum = depreciatedSum + r.Cells(CELocation, 11)
+            CELocation = CELocation + 1
+            r.Rows(CELocation).Resize(1).Insert
             
         End If
         n = n + 1
     Loop
-    
-'*********施工设备小计*********
-
-'*********运输设备小计*********
-
-'*********生产设备小计*********
+    r.Cells(m, 8) = originalValueSum
+    r.Cells(m, 11) = depreciatedSum
 
 '*********测量及试验设备小计*********
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 3), TestEquipment) Then
+            TELocation = i + 1
+            Exit For
+        End If
+    Next i
+    m = TELocation - 1
+    r.Rows(n + TELocation).Resize(1).Insert
+    r.Rows(n + TELocation).Clear
+    n = 2
+    Do While w.Cells(n, 1) <> ""
+        If Left(w.Cells(n, 3), 2) = "05" Then
+
+            r.Cells(TELocation, 3) = w.Cells(n, 2)  '资产类别
+            r.Cells(TELocation, 4) = w.Cells(n, 3) '类别编号
+            r.Cells(TELocation, 5) = w.Cells(n, 1)   '资产名称
+            r.Cells(TELocation, 6) = w.Cells(n, 12)  '组资日期L
+            r.Cells(TELocation, 7) = w.Cells(n, 8)   '使用期数H
+            r.Cells(TELocation, 8) = w.Cells(n, 15)  '原值   384
+            If w.Cells(n, 15) <> 0 Then
+                r.Cells(TELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+            End If
+            r.Cells(TELocation, 10) = w.Cells(n, 21)  '本期计提折旧U   1521
+            r.Cells(TELocation, 11) = w.Cells(n, 25)   '累计折旧y  228
+            r.Cells(TELocation, 12) = w.Cells(n, 27)   '净值aa  156
+'            计算原值和
+            originalValueSum = originalValueSum + r.Cells(TELocation, 8)
+'            计算折旧和
+            depreciatedSum = depreciatedSum + r.Cells(TELocation, 11)
+            
+            TELocation = TELocation + 1
+            r.Rows(TELocation).Resize(1).Insert
+        End If
+        n = n + 1
+        
+    Loop
+    r.Cells(m, 8) = originalValueSum
+    r.Cells(m, 11) = depreciatedSum
 
 '*********其他固定资产小计*********
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 3), OtherEquipment) Then
+            OELocation = i + 1
+            Exit For
+        End If
+    Next i
+    m = OELocation - 1
+    r.Rows(n + OELocation).Resize(1).Insert
+    r.Rows(n + OELocation).Clear
+    n = 2
+    Do While w.Cells(n, 1) <> ""
+        If Left(w.Cells(n, 3), 2) = "06" Then
 
+            r.Cells(OELocation, 3) = w.Cells(n, 2)   '资产类别
+            r.Cells(OELocation, 4) = w.Cells(n, 3)  '类别编号
+            r.Cells(OELocation, 5) = w.Cells(n, 1)   '资产名称
+            r.Cells(OELocation, 6) = w.Cells(n, 12)   '组资日期L
+            r.Cells(OELocation, 7) = w.Cells(n, 8)  '使用期数H
+            r.Cells(OELocation, 8) = w.Cells(n, 15)  '原值   384
+            If w.Cells(n, 15) <> 0 Then
+                r.Cells(OELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+            End If
+            r.Cells(OELocation, 10) = w.Cells(n, 21)  '本期计提折旧U   1521
+            r.Cells(OELocation, 11) = w.Cells(n, 25)  '累计折旧y  228
+            r.Cells(OELocation, 12) = w.Cells(n, 27)  '净值aa  156
+
+'            计算原值和
+            originalValueSum = originalValueSum + r.Cells(OELocation, 8)
+'            计算折旧和
+            depreciatedSum = depreciatedSum + r.Cells(OELocation, 11)
+            OELocation = OELocation + 1
+            r.Rows(OELocation).Resize(1).Insert
+            
+        End If
+        n = n + 1
+        
+    Loop
+    r.Cells(m, 8) = originalValueSum
+    r.Cells(m, 11) = depreciatedSum
     
 End Sub
