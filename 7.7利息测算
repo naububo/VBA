@@ -21,7 +21,7 @@ Sub CalculateInterest()
             Exit For
         End If
     Next i
-'    Call duanFilling(duanQi, shortLoan)
+    'Call duanFilling(duanQi, shortLoan)
     
      '计算利息测算sheet里面长期借款的开始位置
     For i = shortLoan To endRow
@@ -51,7 +51,7 @@ Sub CalculateInterest()
 '    sheetName = Left(r.Cells(8, 2), 4)
 '    MsgBox sheetName
 End Sub
-'deadlineStyle传入长短期, position传入填充长短期的具体位
+'传入短期
 Sub duanFilling(deadlineStyle$, position&)
     Dim m&, n&, ListEndRow&, bankLocation&, notBankLocation&, stockCompanyLocation&, count&
     Dim bank$, notBank$, jointStockCompany$
@@ -139,16 +139,22 @@ Sub duanFilling(deadlineStyle$, position&)
                     ar.Cells(position, 4) = "='[7.7利息测算测试.xlsm]短期借款明细表'!R" & n & "C17"      '本期增加D
                     ar.Cells(position, 5) = "='[7.7利息测算测试.xlsm]短期借款明细表'!R" & n & "C19"      '本期减少（本期偿还？）E
                     ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                    
+                    
                     ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
                      '判断是不是date格式
                     If TypeName(ar.Cells(position, 7).Value) <> Date Then
                         ar.Cells(position, 7) = Replace(Cells(position, 7), ".", "-")
                     End If
+                    
+                    
                     ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
                      '判断是不是date格式
                     If TypeName(ar.Cells(position, 8).Value) <> Date Then
                         ar.Cells(position, 8) = Replace(Cells(position, 8), ".", "-")
                     End If
+                    
+                    
                     ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
                     ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
                     ar.Cells(position, 11) = ws.Cells(n, 8)      '实际利率
@@ -218,25 +224,21 @@ Sub changFilling(deadlineStyle$, position&)
                     ar.Cells(position, 5) = "='[7.7利息测算测试.xlsm]长期借款明细表'!R" & n & "C19"      '本期减少（本期偿还？）E
                     ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
                     
+                     
                      '判断是不是date格式
-                    If TypeName(ws.Cells(n, 3).Value) <> Date Then
-                        If InStr(ws.Cells(n, 3), ".") Then
-                            ws.Cells(n, 3) = Replace(ws.Cells(n, 3), ".", "-")
-                        ElseIf InStr(ws.Cells(n, 3), "/") Then
-                            ws.Cells(n, 3) = ws.Cells(n, 3)
-                        End If
+                    If InStr(ws.Cells(n, 3), ".") Then
+                        ar.Cells(position, 7) = Replace(ws.Cells(n, 3), ".", "-")
+                    Else
+                        ar.Cells(position, 7) = ws.Cells(n, 3)
                     End If
-                    ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
                     
-                     '判断是不是date格式
-                    If TypeName(ws.Cells(n, 4).Value) <> Date Then
-                        If InStr(ws.Cells(n, 4), ".") Then
-                            ws.Cells(n, 4) = Replace(ws.Cells(n, 4), ".", "-")
-                        ElseIf InStr(ar.Cells(position, 7), "/") Then
-                            ws.Cells(n, 4) = ws.Cells(n, 4)
-                        End If
+                     '判断是不是date格式,'到期日H
+                
+                    If InStr(ws.Cells(n, 4), ".") Then
+                        ar.Cells(position, 8) = Replace(ws.Cells(n, 4), ".", "-")
+                    Else
+                        ar.Cells(position, 8) = ws.Cells(n, 4)
                     End If
-                    ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
                     
                     ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
                     ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
@@ -249,18 +251,18 @@ Sub changFilling(deadlineStyle$, position&)
                     position = position + 1
 '                    都是*实际利率或者固定利率、浮动利率
     ''                期初和期末都有余额的，如果有本期增加或减少的情况，请用期初余额和期末余额的平均值乘以计息天数计算
-    '                If (ar.Cells(position, 3) <> 0 And ar.Cells(position, 6) <> 0) And (ar.Cells(position, 4) <> 0 Or ar.Cells(position, 5) <> 0) Then
-'                        ar.Cells(position, 13) = ws.Cells(n, 7)      '利息费用-per PwC
-    ''                有期初数的，本期全额减少导致期末余额为0的，请用本期减少乘以计息天数计算。
-    '                ElseIf ar.Cells(position, 3) <> 0 And (ar.Cells(position, 5) = ar.Cells(position, 3)) Then
-    '                    ar.Cells(position, 13) = ws.Cells(n, 7)      '利息费用-per PwC
-    ''                没有期初数的，系本期新增的，请用期末余额乘以计息天数计算
-    '                ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 6)) Then
-    '                    ar.Cells(position, 13) = ws.Cells(n, 7)      '利息费用-per PwC
-    ''                没有期初数的，本期新增的，但本期已减少至期末余额为0，请用本期增加乘以计息天数计算。
-    '                ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 5)) Then
-    '                    ar.Cells(position, 13) = ws.Cells(n, 7)      '利息费用-per PwC
-    '                End If
+                    If (ar.Cells(position, 3) <> 0 And ar.Cells(position, 6) <> 0) And (ar.Cells(position, 4) <> 0 Or ar.Cells(position, 5) <> 0) Then
+                        ar.Cells(position, 13) = ((ar.Cells(position, 3) + ar.Cells(position, 6)) / 2) * (1 + (ar.Cells(position, 9) + ar.Cells(position, 10) + ar.Cells(position, 11)) / 100) * (ar.Cells(position, 12) / 364) '利息费用-per PwC
+    '                有期初数的，本期全额减少导致期末余额为0的，请用本期减少乘以计息天数计算。
+                    ElseIf ar.Cells(position, 3) <> 0 And (ar.Cells(position, 5) = ar.Cells(position, 3)) Then
+                        ar.Cells(position, 13) = ar.Cells(position, 5) * (1 + (ar.Cells(position, 9) + ar.Cells(position, 10) + ar.Cells(position, 11)) / 100) * ar.Cells(position, 12) / 364     '利息费用-per PwC
+    '                没有期初数的，系本期新增的，请用期末余额乘以计息天数计算
+                    ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 6)) Then
+                        ar.Cells(position, 13) = ar.Cells(position, 6) * (1 + (ar.Cells(position, 9) + ar.Cells(position, 10) + ar.Cells(position, 11)) / 100) * ar.Cells(position, 12) / 364     '利息费用-per PwC
+    '                没有期初数的，本期新增的，但本期已减少至期末余额为0，请用本期增加乘以计息天数计算。
+                    ElseIf ar.Cells(position, 3) = 0 And (ar.Cells(position, 4) = ar.Cells(position, 5)) Then
+                        ar.Cells(position, 13) = ar.Cells(position, 4) * (1 + (ar.Cells(position, 9) + ar.Cells(position, 10) + ar.Cells(position, 11)) / 100) * ar.Cells(position, 12) / 364    '利息费用-per PwC
+                    End If
                     '自动添加一行空行
                     ar.Rows(position + 1).Resize(1).Insert
                 End If
@@ -275,24 +277,21 @@ Sub changFilling(deadlineStyle$, position&)
                     ar.Cells(position, 5) = "='[7.7利息测算测试.xlsm]长期借款明细表'!R" & n & "C19"      '本期减少（本期偿还？）E
                     ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
                      '判断是不是date格式
-                    If TypeName(ws.Cells(n, 3).Value) <> Date Then
-                        If InStr(ws.Cells(n, 3), ".") Then
-                            ws.Cells(n, 3) = Replace(ws.Cells(n, 3), ".", "-")
-                        ElseIf InStr(ws.Cells(n, 3), "/") Then
-                            ws.Cells(n, 3) = ws.Cells(n, 3)
-                        End If
+                    If InStr(ws.Cells(n, 3), ".") Then
+                        ar.Cells(position, 7) = Replace(ws.Cells(n, 3), ".", "-")
+                    Else
+                        ar.Cells(position, 7) = ws.Cells(n, 3)
                     End If
-                    ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
                     
-                     '判断是不是date格式
-                    If TypeName(ws.Cells(n, 4).Value) <> Date Then
-                        If InStr(ws.Cells(n, 4), ".") Then
-                            ws.Cells(n, 4) = Replace(ws.Cells(n, 4), ".", "-")
-                        Else
-                            ws.Cells(n, 4) = ws.Cells(n, 4)
-                        End If
+                     '判断是不是date格式,'到期日H
+                
+                    If InStr(ws.Cells(n, 4), ".") Then
+                        ar.Cells(position, 8) = Replace(ws.Cells(n, 4), ".", "-")
+                    Else
+                        ar.Cells(position, 8) = ws.Cells(n, 4)
                     End If
-                    ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
+                    
+                     
                     
                     ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
                     ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
@@ -321,4 +320,3 @@ Sub changFilling(deadlineStyle$, position&)
         End If
     Next ws
 End Sub
-
