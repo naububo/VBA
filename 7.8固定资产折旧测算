@@ -1,2 +1,58 @@
 'CREC_固定资产折旧测算代码
 '给新进intern的面试题目
+Option Explicit
+Sub AccumulatedDepreciation() '累计折旧取数
+    Dim i&, n&, originalValue&, endRow&
+    Dim BLocation&, TurningLocation&, CELocation&, TELocation&, OELocation&
+    Dim Building$, TurningEquipment$, ConstructionEquipment$, TestEquipment$, OtherEquipment$
+    Dim r As Worksheet, w As Worksheet
+    
+    Set r = Worksheets("累计折旧测试")
+    Set w = Worksheets("卡片台账")
+    
+    endRow = r.UsedRange.Row + r.UsedRange.Rows.Count - 1 '利息测算sheet
+    
+    Building = "房屋及建筑物小计": TurningEquipment = "运输设备小计": ConstructionEquipment = "生产设备小计"
+    TestEquipment = "测量及试验设备小计": OtherEquipment = "其他固定资产小计"
+
+'*********房屋及建筑物小计*********
+    For i = 6 To endRow
+        If InStr(r.Cells(i, 3), Building) Then
+            BLocation = i + 1
+            Exit For
+        End If
+    Next i
+'    MsgBox BLocation
+    n = 2
+    Do While w.Cells(n, 1) <> ""
+        If Left(w.Cells(n, 3), 2) = "01" Then
+            r.Cells(n + BLocation - 2, 3) = w.Cells(n, 2) '资产类别
+            r.Cells(n + BLocation - 2, 4) = w.Cells(n, 3) '类别编号
+            r.Cells(n + BLocation - 2, 5) = w.Cells(n, 1) '资产名称
+            r.Cells(n + BLocation - 2, 6) = w.Cells(n, 12) '组资日期L
+            r.Cells(n + BLocation - 2, 7) = w.Cells(n, 8) '使用期数H
+            r.Cells(n + BLocation - 2, 8) = w.Cells(n, 15) '原值   384
+            r.Cells(n + BLocation - 2, 9) = w.Cells(n, 17) / w.Cells(n, 15) '净残值率   5%   Q/O*100%
+            r.Cells(n + BLocation - 2, 10) = w.Cells(n, 21) '本期计提折旧U   1521
+            r.Cells(n + BLocation - 2, 11) = w.Cells(n, 25) '累计折旧y  228
+            r.Cells(n + BLocation - 2, 12) = w.Cells(n, 27) '净值aa  156
+            
+            r.Rows(n + BLocation - 1).Resize(1).Insert
+            MsgBox TypeName(r.Cells(n + BLocation - 2, 10).Value)
+            
+        End If
+        n = n + 1
+    Loop
+    
+'*********施工设备小计*********
+
+'*********运输设备小计*********
+
+'*********生产设备小计*********
+
+'*********测量及试验设备小计*********
+
+'*********其他固定资产小计*********
+
+    
+End Sub
