@@ -1,4 +1,4 @@
-'CREC_固定资产折旧测算代码
+'CREC_固定资产折旧测算代码（最终）
 '给新进intern的面试题目
 Option Explicit
 Sub AccumulatedDepreciation() '累计折旧取数
@@ -280,3 +280,4 @@ Sub AccumulatedDepreciation() '累计折旧取数
     r.Cells(29, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
     
 End Sub
+
