@@ -1,4 +1,4 @@
-'CREC_固定资产折旧测算代码（最终）
+'CREC_固定资产折旧测算代码
 '给新进intern的面试题目
 Option Explicit
 Sub AccumulatedDepreciation() '累计折旧取数
@@ -15,228 +15,228 @@ Sub AccumulatedDepreciation() '累计折旧取数
     Building = "房屋及建筑物小计": TurningEquipment = "运输设备小计": ConstructionEquipment = "生产设备小计"
     SEquipment = "施工设备小计": TestEquipment = "测量及试验设备小计": OtherEquipment = "其他固定资产小计"
 
-''*********房屋及建筑物小计*********
-    For i = 6 To endRow
-        If InStr(r.Cells(i, 3), Building) Then
-            BLocation = i + 1
-            Exit For
-        End If
-    Next i
-    m = BLocation - 1
-'    MsgBox BLocation
-    r.Rows(n + BLocation).Resize(1).Insert
-    r.Rows(n + BLocation).Clear
-    n = 2
-    Do While w.Cells(n, 1) <> ""
-        If Left(w.Cells(n, 3), 2) = "01" Then
-            r.Cells(BLocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
-            r.Cells(BLocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
-            r.Cells(BLocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
-            r.Cells(BLocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
-            r.Cells(BLocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
-            r.Cells(BLocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
-            If w.Cells(n, 15) <> 0 Then
-                r.Cells(BLocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
-            End If
-            r.Cells(BLocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
-            r.Cells(BLocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
-            r.Cells(BLocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
-'            计算原值和
-            originalValueSum = originalValueSum + r.Cells(BLocation, 8)
-'            计算折旧和
-            depreciatedSum = depreciatedSum + r.Cells(BLocation, 11)
-
-            BLocation = BLocation + 1
-            r.Rows(BLocation).Resize(1).Insert
-
-        End If
-        n = n + 1
-    Loop
-    r.Cells(m, 8) = originalValueSum
-    r.Cells(m, 11) = depreciatedSum
-    r.Cells(24, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
-    r.Cells(24, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+'''*********房屋及建筑物小计*********
+'    For i = 6 To endRow
+'        If InStr(r.Cells(i, 3), Building) Then
+'            BLocation = i + 1
+'            Exit For
+'        End If
+'    Next i
+'    m = BLocation - 1
+''    MsgBox BLocation
+'    r.Rows(n + BLocation).Resize(1).Insert
+'    r.Rows(n + BLocation).Clear
+'    n = 2
+'    Do While w.Cells(n, 1) <> ""
+'        If Left(w.Cells(n, 3), 2) = "01" Then
+'            r.Cells(BLocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
+'            r.Cells(BLocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
+'            r.Cells(BLocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
+'            r.Cells(BLocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
+'            r.Cells(BLocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
+'            r.Cells(BLocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
+'            If w.Cells(n, 15) <> 0 Then
+'                r.Cells(BLocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+'            End If
+'            r.Cells(BLocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
+'            r.Cells(BLocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
+'            r.Cells(BLocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
+''            计算原值和
+'            originalValueSum = originalValueSum + r.Cells(BLocation, 8)
+''            计算折旧和
+'            depreciatedSum = depreciatedSum + r.Cells(BLocation, 11)
+'
+'            BLocation = BLocation + 1
+'            r.Rows(BLocation).Resize(1).Insert
+'
+'        End If
+'        n = n + 1
+'    Loop
+'    r.Cells(m, 8) = originalValueSum
+'    r.Cells(m, 11) = depreciatedSum
+'    r.Cells(24, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
+'    r.Cells(24, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
 '
 '
-''*********施工设备小计*********
-
-    For i = 6 To endRow
-        If InStr(r.Cells(i, 3), SEquipment) Then
-            SELocation = i + 1
-            Exit For
-        End If
-    Next i
-    m = SELocation - 1
-'    MsgBox BLocation
-    r.Rows(n + SELocation).Resize(1).Insert
-    r.Rows(n + SELocation).Clear
-    n = 2
-    Do While w.Cells(n, 1) <> ""
-        If Left(w.Cells(n, 3), 2) = "02" Then
-
-            r.Cells(SELocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
-            r.Cells(SELocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
-            r.Cells(SELocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
-            r.Cells(SELocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
-            r.Cells(SELocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
-            r.Cells(SELocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
-            If w.Cells(n, 15) <> 0 Then
-                r.Cells(SELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
-            End If
-            r.Cells(SELocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
-            r.Cells(SELocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
-            r.Cells(SELocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
-
-            '计算原值和
-            originalValueSum = originalValueSum + r.Cells(SELocation, 8)
-'            计算折旧和
-            depreciatedSum = depreciatedSum + r.Cells(SELocation, 11)
-
-            SELocation = SELocation + 1
-            r.Rows(SELocation).Resize(1).Insert
-'            MsgBox TypeName(r.Cells(n + BLocation - 2, 10).Value)
-
-        End If
-        n = n + 1
-    Loop
-    r.Cells(m, 8) = originalValueSum
-    r.Cells(m, 11) = depreciatedSum
-    r.Cells(25, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
-    r.Cells(25, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+'''*********施工设备小计*********
 '
-
-'*********运输设备小计*********
-
-    For i = 6 To endRow
-        If InStr(r.Cells(i, 3), TurningEquipment) Then
-            TurningLocation = i + 1
-            Exit For
-        End If
-    Next i
-    m = TurningLocation - 1
-    r.Rows(n + TurningLocation).Resize(1).Insert
-    r.Rows(n + TurningLocation).Clear
-    n = 2
-    Do While w.Cells(n, 1) <> ""
-        If Left(w.Cells(n, 3), 2) = "03" Then
-
-            r.Cells(TurningLocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
-            r.Cells(TurningLocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
-            r.Cells(TurningLocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
-            r.Cells(TurningLocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
-            r.Cells(TurningLocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
-            r.Cells(TurningLocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
-            If w.Cells(n, 15) <> 0 Then
-                r.Cells(TurningLocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
-            End If
-            r.Cells(TurningLocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
-            r.Cells(TurningLocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
-            r.Cells(TurningLocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
-
-'            计算原值和
-            originalValueSum = originalValueSum + r.Cells(TurningLocation, 8)
-'            计算折旧和
-            depreciatedSum = depreciatedSum + r.Cells(TurningLocation, 11)
-
-            TurningLocation = TurningLocation + 1
-            r.Rows(TurningLocation).Resize(1).Insert
-
-
-        End If
-        n = n + 1
-    Loop
-    r.Cells(m, 8) = originalValueSum
-    r.Cells(m, 11) = depreciatedSum
-    r.Cells(26, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
-    r.Cells(26, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
-
-''*********生产设备小计*********
-    For i = 6 To endRow
-        If InStr(r.Cells(i, 3), ConstructionEquipment) Then
-            CELocation = i + 1
-            Exit For
-        End If
-    Next i
-    m = CELocation - 1
-    r.Rows(n + CELocation).Resize(1).Insert
-    r.Rows(n + CELocation).Clear
-    n = 2
-    Do While w.Cells(n, 1) <> ""
-        If Left(w.Cells(n, 3), 2) = "04" Then
-
-            r.Cells(CELocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
-            r.Cells(CELocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
-            r.Cells(CELocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
-            r.Cells(CELocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
-            r.Cells(CELocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
-            r.Cells(CELocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
-            If w.Cells(n, 15) <> 0 Then
-                r.Cells(CELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
-            End If
-            r.Cells(CELocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
-            r.Cells(CELocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
-            r.Cells(CELocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
-
-
-'            计算原值和
-            originalValueSum = originalValueSum + r.Cells(CELocation, 8)
-'            计算折旧和
-            depreciatedSum = depreciatedSum + r.Cells(CELocation, 11)
-            CELocation = CELocation + 1
-            r.Rows(CELocation).Resize(1).Insert
-
-        End If
-        n = n + 1
-    Loop
-    r.Cells(m, 8) = originalValueSum
-    r.Cells(m, 11) = depreciatedSum
-    r.Cells(27, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
-    r.Cells(27, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+'    For i = 6 To endRow
+'        If InStr(r.Cells(i, 3), SEquipment) Then
+'            SELocation = i + 1
+'            Exit For
+'        End If
+'    Next i
+'    m = SELocation - 1
+''    MsgBox BLocation
+'    r.Rows(n + SELocation).Resize(1).Insert
+'    r.Rows(n + SELocation).Clear
+'    n = 2
+'    Do While w.Cells(n, 1) <> ""
+'        If Left(w.Cells(n, 3), 2) = "02" Then
 '
+'            r.Cells(SELocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
+'            r.Cells(SELocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
+'            r.Cells(SELocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
+'            r.Cells(SELocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
+'            r.Cells(SELocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
+'            r.Cells(SELocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
+'            If w.Cells(n, 15) <> 0 Then
+'                r.Cells(SELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+'            End If
+'            r.Cells(SELocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
+'            r.Cells(SELocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
+'            r.Cells(SELocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
+'
+'            '计算原值和
+'            originalValueSum = originalValueSum + r.Cells(SELocation, 8)
+''            计算折旧和
+'            depreciatedSum = depreciatedSum + r.Cells(SELocation, 11)
+'
+'            SELocation = SELocation + 1
+'            r.Rows(SELocation).Resize(1).Insert
+''            MsgBox TypeName(r.Cells(n + BLocation - 2, 10).Value)
+'
+'        End If
+'        n = n + 1
+'    Loop
+'    r.Cells(m, 8) = originalValueSum
+'    r.Cells(m, 11) = depreciatedSum
+'    r.Cells(25, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
+'    r.Cells(25, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+'
+''
+'''*********运输设备小计*********
+''
+'    For i = 6 To endRow
+'        If InStr(r.Cells(i, 3), TurningEquipment) Then
+'            TurningLocation = i + 1
+'            Exit For
+'        End If
+'    Next i
+'    m = TurningLocation - 1
+'    r.Rows(TurningLocation).Resize(1).Insert
+'    r.Rows(TurningLocation).Clear
+'    n = 2
+'    Do While w.Cells(n, 1) <> ""
+'        If Left(w.Cells(n, 3), 2) = "03" Then
+'
+'            r.Cells(TurningLocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
+'            r.Cells(TurningLocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
+'            r.Cells(TurningLocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
+'            r.Cells(TurningLocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
+'            r.Cells(TurningLocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
+'            r.Cells(TurningLocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
+'            If w.Cells(n, 15) <> 0 Then
+'                r.Cells(TurningLocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+'            End If
+'            r.Cells(TurningLocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
+'            r.Cells(TurningLocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
+'            r.Cells(TurningLocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
+'
+''            计算原值和
+'            originalValueSum = originalValueSum + r.Cells(TurningLocation, 8)
+''            计算折旧和
+'            depreciatedSum = depreciatedSum + r.Cells(TurningLocation, 11)
+'
+'            TurningLocation = TurningLocation + 1
+'            r.Rows(TurningLocation).Resize(1).Insert
+'
+'
+'        End If
+'        n = n + 1
+'    Loop
+'    r.Cells(m, 8) = originalValueSum
+'    r.Cells(m, 11) = depreciatedSum
+'    r.Cells(26, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
+'    r.Cells(26, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+'
+''''*********生产设备小计*********
+'    For i = 6 To endRow
+'        If InStr(r.Cells(i, 3), ConstructionEquipment) Then
+'            CELocation = i + 1
+'            Exit For
+'        End If
+'    Next i
+'    m = CELocation - 1
+'    r.Rows(n + CELocation).Resize(1).Insert
+'    r.Rows(n + CELocation).Clear
+'    n = 2
+'    Do While w.Cells(n, 1) <> ""
+'        If Left(w.Cells(n, 3), 2) = "04" Then
+'
+'            r.Cells(CELocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
+'            r.Cells(CELocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
+'            r.Cells(CELocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
+'            r.Cells(CELocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
+'            r.Cells(CELocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
+'            r.Cells(CELocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
+'            If w.Cells(n, 15) <> 0 Then
+'                r.Cells(CELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+'            End If
+'            r.Cells(CELocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
+'            r.Cells(CELocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
+'            r.Cells(CELocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
+'
+'
+''            计算原值和
+'            originalValueSum = originalValueSum + r.Cells(CELocation, 8)
+''            计算折旧和
+'            depreciatedSum = depreciatedSum + r.Cells(CELocation, 11)
+'            CELocation = CELocation + 1
+'            r.Rows(CELocation).Resize(1).Insert
+'
+'        End If
+'        n = n + 1
+'    Loop
+'    r.Cells(m, 8) = originalValueSum
+'    r.Cells(m, 11) = depreciatedSum
+'    r.Cells(27, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
+'    r.Cells(27, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+''
 ''*********测量及试验设备小计*********
-    For i = 6 To endRow
-        If InStr(r.Cells(i, 3), TestEquipment) Then
-            TELocation = i + 1
-            Exit For
-        End If
-    Next i
-    m = TELocation - 1
-    r.Rows(n + TELocation).Resize(1).Insert
-    r.Rows(n + TELocation).Clear
-    n = 2
-    Do While w.Cells(n, 1) <> ""
-        If Left(w.Cells(n, 3), 2) = "05" Then
-
-            r.Cells(TELocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
-            r.Cells(TELocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
-            r.Cells(TELocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
-            r.Cells(TELocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
-            r.Cells(TELocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
-            r.Cells(TELocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
-            If w.Cells(n, 15) <> 0 Then
-                r.Cells(TELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
-            End If
-            r.Cells(TELocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
-            r.Cells(TELocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
-            r.Cells(TELocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
-
-'            计算原值和
-            originalValueSum = originalValueSum + r.Cells(TELocation, 8)
-'            计算折旧和
-            depreciatedSum = depreciatedSum + r.Cells(TELocation, 11)
-
-            TELocation = TELocation + 1
-            r.Rows(TELocation).Resize(1).Insert
-        End If
-        n = n + 1
-
-    Loop
-    r.Cells(m, 8) = originalValueSum
-    r.Cells(m, 11) = depreciatedSum
-    r.Cells(28, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
-    r.Cells(28, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
-
-'*********其他固定资产小计*********
+'    For i = 6 To endRow
+'        If InStr(r.Cells(i, 3), TestEquipment) Then
+'            TELocation = i + 1
+'            Exit For
+'        End If
+'    Next i
+'    m = TELocation - 1
+'    r.Rows(TELocation).Resize(1).Insert
+'    r.Rows(TELocation).Clear
+'    n = 2
+'    Do While w.Cells(n, 1) <> ""
+'        If Left(w.Cells(n, 3), 2) = "05" Then
+'
+'            r.Cells(TELocation, 3) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C2"   '资产类别
+'            r.Cells(TELocation, 4) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C3"  '类别编号
+'            r.Cells(TELocation, 5) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C1"  '资产名称
+'            r.Cells(TELocation, 6) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C12"  '组资日期L
+'            r.Cells(TELocation, 7) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C8" '使用期数H
+'            r.Cells(TELocation, 8) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C15" '原值
+'            If w.Cells(n, 15) <> 0 Then
+'                r.Cells(TELocation, 9) = w.Cells(n, 17) / w.Cells(n, 15) * 100  '净残值率   5%   Q/O*100%
+'            End If
+'            r.Cells(TELocation, 10) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C21"  '本期计提折旧U
+'            r.Cells(TELocation, 11) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C25"  '累计折旧y
+'            r.Cells(TELocation, 12) = "='[CREC_固定资产折旧测算.xlsm]卡片台账'!R" & n & "C27"  '净值aa
+'
+''            计算原值和
+'            originalValueSum = originalValueSum + r.Cells(TELocation, 8)
+''            计算折旧和
+'            depreciatedSum = depreciatedSum + r.Cells(TELocation, 11)
+'
+'            TELocation = TELocation + 1
+'            r.Rows(TELocation).Resize(1).Insert
+'        End If
+'        n = n + 1
+'
+'    Loop
+'    r.Cells(m, 8) = originalValueSum
+'    r.Cells(m, 11) = depreciatedSum
+'    r.Cells(28, 4) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C8"
+'    r.Cells(28, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
+''
+''*********其他固定资产小计*********
     For i = 6 To endRow
         If InStr(r.Cells(i, 3), OtherEquipment) Then
             OELocation = i + 1
@@ -244,8 +244,8 @@ Sub AccumulatedDepreciation() '累计折旧取数
         End If
     Next i
     m = OELocation - 1
-    r.Rows(n + OELocation).Resize(1).Insert
-    r.Rows(n + OELocation).Clear
+    r.Rows(OELocation).Resize(1).Insert
+    r.Rows(OELocation).Clear
     n = 2
     Do While w.Cells(n, 1) <> ""
         If Left(w.Cells(n, 3), 2) = "06" Then
@@ -269,10 +269,10 @@ Sub AccumulatedDepreciation() '累计折旧取数
             depreciatedSum = depreciatedSum + r.Cells(OELocation, 11)
             OELocation = OELocation + 1
             r.Rows(OELocation).Resize(1).Insert
-            
+
         End If
         n = n + 1
-        
+
     Loop
     r.Cells(m, 8) = originalValueSum
     r.Cells(m, 11) = depreciatedSum
@@ -280,4 +280,3 @@ Sub AccumulatedDepreciation() '累计折旧取数
     r.Cells(29, 5) = "='[CREC_固定资产折旧测算.xlsm]累计折旧测试'!R" & m & "C11"
     
 End Sub
-
