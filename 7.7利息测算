@@ -1,3 +1,6 @@
+'取出linked
+'但是还是有点问题，主要是短日期空日期处理
+
 Option Explicit
 Sub CalculateInterest()
 'shortLoan（longLoan）为短（长）期借款的起始位置
@@ -21,19 +24,29 @@ Sub CalculateInterest()
             Exit For
         End If
     Next i
+    
+'********    调用短期借款子过程    ***********
     Call duanFilling(duanQi, shortLoan)
+    
+    
     
      '计算利息测算sheet里面长期借款的开始位置
     For i = shortLoan To endRow
         If InStr(r.Cells(i, 2), changQi) Then
-            longLoan = i + 3
+            longLoan = i + 5
             Exit For
         End If
     Next i
+    
+    
     'ceshi = 9
     '取出linked测试
     'r.Cells(4, 1) = "='[利息测算.xlsm]长期借款明细表'!R" & ceshi & "C1"
-'    Call changFilling(changQi, longLoan)
+    
+'********    调用长期借款子过程    ***********
+    Call changFilling(changQi, longLoan)
+    
+    
     
 '     '计算明细表sheet里面一银行的开始位置
 '    For i = 6 To endRow
@@ -88,7 +101,7 @@ Sub duanFilling(deadlineStyle$, position&)
             '此时填充的是一、自银行取得的借款
             For n = bankLocation To notBankLocation - 1
                 If Trim(ws.Cells(n, 1)) <> "" And Trim(ws.Cells(n, 1)) <> "抵销" Then
-                    ar.Cells(position, 2) = ws.Cells(n, 1)      '银行名称B
+                    ar.Cells(position, 2) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C1"      '银行名称B
                     ar.Cells(position, 3) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C15"      '期初数C
                     ar.Cells(position, 4) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C17"      '本期增加D
                     ar.Cells(position, 5) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C19"       '本期减少（本期偿还？）E
@@ -101,23 +114,23 @@ Sub duanFilling(deadlineStyle$, position&)
                     End If
                     
                     
-                    ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
-                    ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
+                    ar.Cells(position, 6) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C22"      '期末余额（期末数）F
+                    ar.Cells(position, 7) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C3"       '借入日G
                      '判断是不是date格式
                     If TypeName(ar.Cells(position, 7).Value) <> Date Then
                         ar.Cells(position, 7) = Replace(Cells(position, 7), ".", "-")
                     End If
-                    ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
+                    ar.Cells(position, 8) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C4"      '到期日H
                      '判断是不是date格式
                     If TypeName(ar.Cells(position, 8).Value) <> Date Then
                         ar.Cells(position, 8) = Replace(Cells(position, 8), ".", "-")
                     End If
-                    ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
-                    ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
-                    ar.Cells(position, 11) = ws.Cells(n, 8)      '实际利率
+                    ar.Cells(position, 9) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C6"     '固定利率I
+                    ar.Cells(position, 10) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C7"     '浮动利率
+                    ar.Cells(position, 11) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C8"     '实际利率
                                        
 '                    2016/3/24与2017/3/23的差是364？or365？怎么取舍呢？
-                    ar.Cells(position, 12) = DateDiff("d", ar.Cells(position, 7), ar.Cells(position, 8))    '本期计息天数
+                    'ar.Cells(position, 12) = DateDiff("d", ar.Cells(position, 7), ar.Cells(position, 8))    '本期计息天数
                     'ar.Cells(position, 13) = ws.Cells(n, 7)      '利息费用-per PwC
                     
 
@@ -145,11 +158,11 @@ Sub duanFilling(deadlineStyle$, position&)
             
             For n = notBankLocation + 1 To stockCompanyLocation - 1
                 If Trim(ws.Cells(n, 1)) <> "" And Trim(ws.Cells(n, 1)) <> "抵销" Then
-                    ar.Cells(position + 3, 2) = ws.Cells(n, 1)    '银行名称B
+                    ar.Cells(position + 3, 2) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C1" '银行名称B
                     ar.Cells(position, 3) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C15"      '期初数C
                     ar.Cells(position, 4) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C17"      '本期增加D
                     ar.Cells(position, 5) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C19"      '本期减少（本期偿还？）E
-                    ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                    ar.Cells(position, 6) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C22"      '期末余额（期末数）F
                     
                     If ar.Cells(position, 3) = "" Then
                         ar.Cells(position, 3) = 0
@@ -158,23 +171,23 @@ Sub duanFilling(deadlineStyle$, position&)
                         ar.Cells(position, 6) = 0
                     End If
                     
-                    ar.Cells(position, 7) = ws.Cells(n, 3)       '借入日G
+                    ar.Cells(position, 7) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C3"      '借入日G
                      '判断是不是date格式
                     If TypeName(ar.Cells(position, 7).Value) <> Date Then
                         ar.Cells(position, 7) = Replace(Cells(position, 7), ".", "-")
                     End If
                     
                     
-                    ar.Cells(position, 8) = ws.Cells(n, 4)      '到期日H
+                    ar.Cells(position, 8) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C4"      '到期日H
                      '判断是不是date格式
                     If TypeName(ar.Cells(position, 8).Value) <> Date Then
                         ar.Cells(position, 8) = Replace(Cells(position, 8), ".", "-")
                     End If
                     
                     
-                    ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
-                    ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
-                    ar.Cells(position, 11) = ws.Cells(n, 8)      '实际利率
+                    ar.Cells(position, 9) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C6"     '固定利率I
+                    ar.Cells(position, 10) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C7"     '浮动利率
+                    ar.Cells(position, 11) = "='[利息测算.xlsm]短期借款明细表'!R" & n & "C8"      '实际利率
                     
                     ar.Cells(position, 12) = DateDiff("d", ar.Cells(position, 7), ar.Cells(position, 8))    '本期计息天数
                     
@@ -237,11 +250,11 @@ Sub changFilling(deadlineStyle$, position&)
             '此时填充的是一、自银行取得的借款
             For n = bankLocation To notBankLocation - 1
                 If Trim(ws.Cells(n, 1)) <> "" And Trim(ws.Cells(n, 1)) <> "抵销" Then
-                    ar.Cells(position, 2) = ws.Cells(n, 1)      '银行名称B
+                    ar.Cells(position, 2) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C1"      '银行名称B
                     ar.Cells(position, 3) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C15"     '期初数C
                     ar.Cells(position, 4) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C17"     '本期增加D
                     ar.Cells(position, 5) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C19"      '本期减少（本期偿还？）E
-                    ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                    ar.Cells(position, 6) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C22"     '期末余额（期末数）F
                     If ar.Cells(position, 3) = "" Then
                         ar.Cells(position, 3) = 0
                     End If
@@ -253,7 +266,7 @@ Sub changFilling(deadlineStyle$, position&)
                     If InStr(ws.Cells(n, 3), ".") Then
                         ar.Cells(position, 7) = Replace(ws.Cells(n, 3), ".", "-")
                     Else
-                        ar.Cells(position, 7) = ws.Cells(n, 3)
+                        ar.Cells(position, 7) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C3"
                     End If
                     
                      '判断是不是date格式,'到期日H
@@ -261,11 +274,11 @@ Sub changFilling(deadlineStyle$, position&)
                     If InStr(ws.Cells(n, 4), ".") Then
                         ar.Cells(position, 8) = Replace(ws.Cells(n, 4), ".", "-")
                     Else
-                        ar.Cells(position, 8) = ws.Cells(n, 4)
+                        ar.Cells(position, 8) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C4"
                     End If
                     
-                    ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
-                    ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
+                    ar.Cells(position, 9) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C6"    '固定利率I
+                    ar.Cells(position, 10) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C7"     '浮动利率
                     
                     If ar.Cells(position, 9) = "" Then
                         ar.Cells(position, 9) = 0
@@ -276,7 +289,7 @@ Sub changFilling(deadlineStyle$, position&)
                     ar.Cells(position, 11) = ar.Cells(position, 9) + ar.Cells(position, 10)
                     
 '                    长期有不少日期格式不对
-                    ar.Cells(position, 12) = DateDiff("d", ar.Cells(position, 7), ar.Cells(position, 8))    '本期计息天数
+                    'ar.Cells(position, 12) = DateDiff("d", ar.Cells(position, 7), ar.Cells(position, 8))    '本期计息天数
                     
                     
 
@@ -304,7 +317,7 @@ Sub changFilling(deadlineStyle$, position&)
             
             For n = notBankLocation + 1 To stockCompanyLocation - 1
                 If Trim(ws.Cells(n, 1)) <> "" And Trim(ws.Cells(n, 1)) <> "抵销" Then
-                    ar.Cells(position + 3, 2) = ws.Cells(n, 1)    '银行名称B
+                    ar.Cells(position + 3, 2) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C1"    '银行名称B
                     ar.Cells(position, 3) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C15"     '期初数C
                     ar.Cells(position, 4) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C17"    '本期增加D
                     ar.Cells(position, 5) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C19"      '本期减少（本期偿还？）E
@@ -316,12 +329,12 @@ Sub changFilling(deadlineStyle$, position&)
                         ar.Cells(position, 6) = 0
                     End If
                     
-                    ar.Cells(position, 6) = ws.Cells(n, 22)      '期末余额（期末数）F
+                    ar.Cells(position, 6) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C22"      '期末余额（期末数）F
                      '判断是不是date格式
                     If InStr(ws.Cells(n, 3), ".") Then
                         ar.Cells(position, 7) = Replace(ws.Cells(n, 3), ".", "-")
                     Else
-                        ar.Cells(position, 7) = ws.Cells(n, 3)
+                        ar.Cells(position, 7) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C3"
                     End If
                     
                      '判断是不是date格式,'到期日H
@@ -329,11 +342,11 @@ Sub changFilling(deadlineStyle$, position&)
                     If InStr(ws.Cells(n, 4), ".") Then
                         ar.Cells(position, 8) = Replace(ws.Cells(n, 4), ".", "-")
                     Else
-                        ar.Cells(position, 8) = ws.Cells(n, 4)
+                        ar.Cells(position, 8) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C4"
                     End If
                     
-                    ar.Cells(position, 9) = ws.Cells(n, 6)      '固定利率I
-                    ar.Cells(position, 10) = ws.Cells(n, 7)      '浮动利率
+                    ar.Cells(position, 9) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C6"      '固定利率I
+                    ar.Cells(position, 10) = "='[利息测算.xlsm]长期借款明细表'!R" & n & "C7"      '浮动利率
                           
                           
                     If ar.Cells(position, 9) = "" Then
